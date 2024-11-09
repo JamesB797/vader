@@ -1,0 +1,8 @@
+defaults:
+  # These options apply to all projects
+  options: ["--vim"]
+
+projects:
+  vader:  # Presets for the Vader repository itself
+    defaults:
+      files: ["readme.md", "vader.py", "presets.example.yaml"]

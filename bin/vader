@@ -1,0 +1,3 @@
+#!/bin/bash
+VADER_DIR="$(dirname "$(dirname "$(readlink -f "$0")")")"
+exec python3 "$VADER_DIR/vader.py" "$@"
