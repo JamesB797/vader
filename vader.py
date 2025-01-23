@@ -112,27 +112,44 @@ def main():
     if 'defaults' in presets_data and 'options' in presets_data['defaults']:
         cmd.extend(presets_data['defaults']['options'])
     
+    # Initialize collections for defaults
+    default_options = []
+    default_files = []
+    default_read_only = []
+
     # Add project defaults
     if ('projects' in presets_data and repo_name in presets_data['projects'] and 
         'defaults' in presets_data['projects'][repo_name]):
         project_defaults = presets_data['projects'][repo_name]['defaults']
-        if 'options' in project_defaults:
-            cmd.extend(project_defaults['options'])
-        if 'files' in project_defaults:
-            cmd.extend(project_defaults['files'])
+        default_options.extend(project_defaults.get('options', []))
+        default_files.extend(project_defaults.get('files', []))
+        default_read_only.extend(project_defaults.get('read_only', []))
     
     # Process any preset arguments
     preset_names = sys.argv[1:] if len(sys.argv) > 1 else []
     
+    # Collect preset configurations
+    preset_options = []
+    preset_files = []
+    preset_read_only = []
+    
     for preset_name in preset_names:
         preset = get_preset(repo_name, preset_name)
-        if preset.options:
-            cmd.extend(preset.options)
-        if preset.read_only:
-            for file in preset.read_only:
-                cmd.extend(["--read", file])
-        if preset.files:
-            cmd.extend(preset.files)
+        preset_options.extend(preset.options or [])
+        preset_files.extend(preset.files or [])
+        preset_read_only.extend(preset.read_only or [])
+    
+    # Combine defaults and presets with proper precedence
+    cmd.extend(default_options)
+    cmd.extend(preset_options)
+    
+    # Add read-only files (defaults + presets)
+    for file in default_read_only + preset_read_only:
+        cmd.extend(["--read", file])
+    
+    # Add files (defaults + presets)
+    cmd.extend(default_files)
+    cmd.extend(preset_files)
     
     try:
         os.execvp("aider", cmd)
