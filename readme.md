@@ -85,3 +85,7 @@ Options are applied in this order:
 
 Environment variables for LLM api keys etc. are loaded from the `.env` file in the Vader
 root directory before launching aider.
+
+## Helpful refactoring commands
+
+Without impacting functionality and total information available in the console, reduce the total code and print volume as much as possible. Do not add # comments.

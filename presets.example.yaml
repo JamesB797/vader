@@ -1,6 +1,6 @@
 defaults:
   # These options apply to all projects
-  options: ["--vim"]
+  options: ["--vim", "--max-chat-history-tokens", "10000"]
 
 projects:
   vader:  # Presets for the Vader repository itself
